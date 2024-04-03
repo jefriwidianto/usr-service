@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  mysql:
+    container_name: usr_db
+    image: mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: Yes
+    ports:
+      - 3306:3306
+    networks:
+      - diksha_network
+  apps:
+    container_name: usr_service
+    image: diksha_user_service
+    ports:
+      - 3000:3000
+    depends_on:
+      - mysql
+    environment:
+      APP_ENV: Docker
+    networks:
+      - diksha_network
+
+networks:
+  diksha_network:
+    name: diksha_network
+    driver: bridge

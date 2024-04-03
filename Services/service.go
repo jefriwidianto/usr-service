@@ -37,7 +37,7 @@ func AppInitialization() {
 	service := serviceInit(&config)
 	Jwt.JwtConfigValue = service.Jwt
 
-	log, err := logger.New("info", "json")
+	log, err := logger.New("info", "json", *AppEnv)
 	if err != nil {
 		panic(err)
 	}

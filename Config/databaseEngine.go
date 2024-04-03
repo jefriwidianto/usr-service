@@ -50,7 +50,7 @@ func (c ConfigSettingSql) InitDB() {
 func migrate(db *sql.DB) (err error) {
 	tx, err := db.Begin()
 	var queryAll []string
-	query, _ := os.ReadFile(dirPathMigration())
+	query, err := os.ReadFile(dirPathMigration())
 	sqlQuery := string(query)
 	queryAll = strings.Split(sqlQuery, ";")
 	for _, v := range queryAll {
@@ -67,5 +67,5 @@ func migrate(db *sql.DB) (err error) {
 
 func dirPathMigration() string {
 	_, filename, _, _ := runtime.Caller(1)
-	return path.Join(path.Dir(filename), PathMigration+"20240402database_migration.sql")
+	return path.Join(path.Dir(filename), "../"+PathMigration+"20240402database_migration.sql")
 }

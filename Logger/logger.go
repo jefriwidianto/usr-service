@@ -3,12 +3,13 @@ package logger
 
 import (
 	"fmt"
-	"net/http"
-	"time"
-
 	"github.com/go-chi/chi/v5/middleware"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"net/http"
+	"path"
+	"runtime"
+	"time"
 )
 
 const (
@@ -59,7 +60,7 @@ func SetLogger(l *Logger) func(next http.Handler) http.Handler {
 }
 
 // New creates a new Logger with given logLevel and logFormat as part of a permanent field of the logger.
-func New(logLevel, logFormat string) (*Logger, error) {
+func New(logLevel, logFormat, env string) (*Logger, error) {
 	if logFormat == logFormatText {
 		logFormat = logFormatConsole
 	}
@@ -72,10 +73,14 @@ func New(logLevel, logFormat string) (*Logger, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	date := time.Now().Format("20060102")
+	_, filename, _, _ := runtime.Caller(1)
+	envPath := path.Join(path.Dir(filename), "../log/sys.log."+date)
+
 	zapConfig.Level = zap.NewAtomicLevelAt(level)
 	zapConfig.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-	zapConfig.OutputPaths = []string{"stdout", "./log/sys.log." + date}
+	zapConfig.OutputPaths = []string{"stdout", envPath}
 
 	logger, err := zapConfig.Build()
 	if err != nil {
