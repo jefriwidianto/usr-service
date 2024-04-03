@@ -15,7 +15,7 @@ type Routes struct {
 func (app *Routes) CollectRoutes(e *echo.Echo, host, port string) {
 	appRoutes := e
 
-	appRoutes.POST("/", app.Controller.Login)
+	appRoutes.POST("/login", app.Controller.Login)
 
 	app.Log.Fatal(appRoutes.Start(fmt.Sprintf("%s:%s", host, port)).Error())
 }
